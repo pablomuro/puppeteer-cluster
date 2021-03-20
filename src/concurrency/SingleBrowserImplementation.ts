@@ -14,7 +14,7 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
     private repairing: boolean = false;
     private repairRequested: boolean = false;
     private openInstances: number = 0;
-    private waitingForRepairResolvers: (() => void)[] = [];
+    private waitingForRepairResolvers: ((value?: unknown) => void)[] = [];
 
     public constructor(options: puppeteer.LaunchOptions, puppeteer: any) {
         super(options, puppeteer);
@@ -56,9 +56,9 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
         await (this.browser as puppeteer.Browser).close();
     }
 
-    protected abstract async createResources(): Promise<ResourceData>;
+    protected abstract createResources(): Promise<ResourceData>;
 
-    protected abstract async freeResources(resources: ResourceData): Promise<void>;
+    protected abstract freeResources(resources: ResourceData): Promise<void>;
 
     public async workerInstance() {
         let resources: ResourceData;
@@ -88,7 +88,7 @@ export default abstract class SingleBrowserImplementation extends ConcurrencyImp
                 };
             },
 
-            close: async () => {},
+            close: async () => { },
 
             repair: async () => {
                 debug('Repair requested');
